@@ -34,7 +34,17 @@ class Detail extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   child: Hero(
                     tag: product.title,
-                    child: Image.asset(product.productImage),
+                    child: Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                             Radius.circular(26)
+                          )),
+                        child: Padding(
+                          padding: const EdgeInsets.all(26),
+                          child: Image(image: NetworkImage(product.productImage),),
+                        )
+                    ),
                   ),
                 )),
             Expanded(
@@ -72,28 +82,11 @@ class Detail extends StatelessWidget {
                             elevation: 10,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(8,0,8,0),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Image.asset(product.productImage),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Image.asset(product.productImage),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Image.asset(product.productImage),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              child: Center(
+                                  child: Text(
+                                      product.address,
+                                    style: TextStyle(fontSize: 20,color: Colors.grey),
+                                  )),
                             ),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(26)),
@@ -104,35 +97,22 @@ class Detail extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(42, 16, 32, 0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-                                  Text(
-                                    "Description",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
-                                        letterSpacing: 2),
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                                    child: Text(
-                                      product.info1 +
-                                          "\n" +
-                                          product.info2,
-                                      softWrap: true,
-                                      style: TextStyle(fontSize: 18),
+                                    child: Directionality(
+                                      textDirection: TextDirection.rtl,
+                                      child: Text(
+                                        product.title +
+                                            "\n" +
+                                            product.info,
+                                        softWrap: true,
+                                        style: TextStyle(fontSize: 18),
+                                      ),
                                     ),
                                   ),
-                                  Text(
-                                    "More...",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontStyle: FontStyle.italic,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
+                                  
                                 ],
                               ),
                             )),
@@ -150,24 +130,10 @@ class Detail extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      product.price.toString() + " \$",
+                                      product.price.toString() ,
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 26),
                                     ),
-                                    FlatButton(
-                                      color: Colors.grey,
-                                      padding: EdgeInsets.fromLTRB(62, 16, 62, 16),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16)),
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Buy",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                    )
                                   ],
                                 ),
                               ),

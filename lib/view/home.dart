@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tnzelat/controller/homeController.dart';
+import 'package:tnzelat/model/appVar.dart';
 import 'package:tnzelat/model/categories.dart';
 import 'package:tnzelat/view/AppStyle.dart';
+import 'package:tnzelat/view/about.dart';
 
 
 import 'card.dart';
@@ -16,20 +18,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<ShoppingModel> products = [
-      new ShoppingModel("Chery QQ", "Cars", 6083.00,
-          "images/car3.png", "Cheap", "Practical"),
-      new ShoppingModel("Dacia Logan", "Cars", 12299.99,
-          "images/car2.png", "Economic", "Spacious"),
-      new ShoppingModel("Nike", "Shoes", 199.99, "images/shoe2.png",
-          "Confortable", "Sportsy"),
-      new ShoppingModel("Nike Air", "Shoes", 349.99,"images/shoe3.png",
-          "Modern", "Popular"),
-      new ShoppingModel("Peugeot 308", "Cars", 16499.99,
-          "images/car1.png", "Luxerious", "Fast"),
-      new ShoppingModel("Timberland", "Shoes", 249.99,
-          "images/shoe1.png", "Robust", "Stylish"),
-    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppStyle.backgroundColor,
@@ -47,15 +35,9 @@ class Home extends StatelessWidget {
                     style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 22) ,)
                   ,)),
             ListTile(
-              title: const Center(child: Text("Contact",style: TextStyle(color: Colors.white),)),
-              onTap: (){
-
-              },
-            ),
-            ListTile(
               title: const Center(child: Text("About",style: TextStyle(color: Colors.white),)),
               onTap: (){
-
+                Get.to(()=>About());
               },
             ),
             ListTile(
@@ -78,6 +60,7 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                   child: TextField(
                     onChanged: (text) {
+                      controller.filterByName(text);
                     },
                     style: TextStyle(color: Colors.white, fontSize: 20),
                     cursorColor: Colors.white,
@@ -109,42 +92,35 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
                   child: Container(
                       height: 50,
-                      child: FutureBuilder(
-                        future: Categories().getCategory(),
-                        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                          if(snapshot.hasData){
-                            return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return index == controller.selected
-                                      ? selectedCategoryCard(snapshot.data[index])
-                                      : GestureDetector(
-                                    onTap: (){controller.changeSelected(index);},
-                                    child: Card(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                      color: Colors.transparent,
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                                        child: Center(
-                                          child: Text(
-                                            snapshot.data[index],
-                                            style: TextStyle(
-                                                color: AppStyle.liteColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                          ),
-                                        ),
-                                      ),
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: AppVar.allCategory.length,
+                          itemBuilder: (context, index) {
+                            return index == controller.selected
+                                ? selectedCategoryCard(AppVar.allCategory[index])
+                                : GestureDetector(
+                              onTap: (){
+                                controller.changeSelected(index,AppVar.allCategory[index]);
+                              },
+                              child: Card(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                color: Colors.transparent,
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                                  child: Center(
+                                    child: Text(
+                                      AppVar.allCategory[index],
+                                      style: TextStyle(
+                                          color: AppStyle.liteColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
                                     ),
-                                  );
-                                });
-                          }
-                          else{
-                            return const CircularProgressIndicator();
-                          }
-                        },),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
                   ),
                 ),
                 Expanded(
@@ -173,25 +149,24 @@ class Home extends StatelessWidget {
                           ),
                         ],
                       ),
-                      FutureBuilder(
-                        future: Categories().getCards(),
-                          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
-                          if(snapshot.hasData){
-                            return ListView.separated(
-                                separatorBuilder: (context, index) => Divider(
-                                  height: 5,
-                                  color: Colors.transparent,
-                                ),
-                                padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return ShoppingCard(snapshot.data[index]);
-                                });
-                          }
-                          else{
-                            return const CircularProgressIndicator();
-                          }
-                          }),
+                      RefreshIndicator(
+                        onRefresh: () async{
+                          await Categories().getCategory(false).then((value) {
+                            controller.changeSelected(0,"All");
+                          });
+                        },
+                        child: ListView.separated(
+                            separatorBuilder: (context, index) => Divider(
+                              height: 5,
+                              color: Colors.transparent,
+                            ),
+                            padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+                            itemCount: controller.filterCard.length,
+                            itemBuilder: (context, index) {
+                              print("512"+index.toString());
+                              return ShoppingCard(controller.filterCard[index]);
+                            }),
+                      ),
 
                     ],
                   ),

@@ -6,6 +6,7 @@ PreferredSizeWidget fullAppbar(BuildContext context) {
   return PreferredSize(
     preferredSize: Size.fromHeight(210.0),
     child: AppBar(
+      backgroundColor: Colors.orange,
       flexibleSpace: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -24,12 +25,8 @@ PreferredSizeWidget fullAppbar(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Hello Brenda!',
+              'TNZELAT',
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-            ),
-            Text(
-              'Today you have 9 tasks',
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
             ),
           ],
         ),
@@ -37,74 +34,11 @@ PreferredSizeWidget fullAppbar(BuildContext context) {
       actions: <Widget>[
         Container(
           margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
-          child: Image.asset('assets/images/photo.png'),
+          child: Image.asset('assets/images/logo.png'),
         ),
       ],
       elevation: 0,
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(10),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          padding: EdgeInsets.fromLTRB(15, 5, 15, 0),
-          decoration: BoxDecoration(
-            color: CustomColors.HeaderGreyLight,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Today Reminder',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    'Meeting with client',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w300),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    '13.00 PM',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w300),
-                  ),
-                ],
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2.9,
-              ),
-              Image.asset(
-                'assets/images/bell-left.png',
-                scale: 1.3,
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: 80),
-                child: Icon(
-                  Icons.clear,
-                  color: Colors.white,
-                  size: 18.0,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+
     ),
   );
 }

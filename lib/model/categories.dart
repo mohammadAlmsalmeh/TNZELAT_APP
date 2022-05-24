@@ -1,27 +1,79 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:tnzelat/model/appVar.dart';
 import 'package:tnzelat/view/card.dart';
+import 'package:tnzelat/view/home.dart';
 
 class Categories{
+Future<List<dynamic>> getCategory(bool go) async{
+  String url ="https://www.t.me/s/testmytnzelat";
+  var result = await get(Uri.parse(url));
+  var data = result.body;
+  AppVar.contentPage = data;
+  await getCards(data);
+  const start = "{%CATEGORY%}";
+  const end = "{%CATEGORYEND%}";
+  final startIndex = data.indexOf(start);
+  final endIndex = data.indexOf(end, startIndex + start.length);
+  var theData = data.substring(startIndex + start.length, endIndex);
+  theData = theData.replaceAll("&quot;",'"');
+  var json = jsonDecode(theData);
+  var list =["All"];
+  if(json["status"]=="success"){
+    for(var j in json["data"]){
+      list.add(j);
+    }
+    AppVar.allCategory = list;
+    if(go){
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        Get.off(Home());
+      });
+    }
 
-Future<List<String>> getCategory() async{
-  List<String> x = ["All","clothes","clean"];
-  return x;
+  }
+  else {
+    List<String> x = ["check your internet connection"];
+    AppVar.allCategory = x;
+  }
+  AppVar.isLoading = false;
+  return [];
 }
-Future<List<ShoppingModel>> getCards() async{
-  List<ShoppingModel> products = [
-    new ShoppingModel("Chery QQ", "Cars", 6083.00,
-        "assets/images/car3.png", "Cheap", "Practical"),
-    new ShoppingModel("Dacia Logan", "Cars", 12299.99,
-        "assets/images/car2.png", "Economic", "Spacious"),
-    new ShoppingModel("Nike", "Shoes", 199.99, "assets/images/shoe2.png",
-        "Confortable", "Sportsy"),
-    new ShoppingModel("Nike Air", "Shoes", 349.99,"assets/images/shoe3.png",
-        "Modern", "Popular"),
-    new ShoppingModel("Peugeot 308", "Cars", 16499.99,
-        "assets/images/car1.png", "Luxerious", "Fast"),
-    new ShoppingModel("Timberland", "Shoes", 249.99,
-        "assets/images/shoe1.png", "Robust", "Stylish"),
-  ];
-  return products;
+
+Future<bool> getCards(String data) async{
+  //String url ="https://www.t.me/s/testmytnzelat";
+  //var result = await get(Uri.parse(url));
+  //var data = result.body;
+  const start = "{%CARDS%}";
+  const end = "{%CARDSEND%}";
+  final startIndex = data.indexOf(start);
+  final endIndex = data.indexOf(end, startIndex + start.length);
+  var theData = data.substring(startIndex + start.length, endIndex);
+  theData = theData.replaceAll("&quot;",'"');
+  var json = jsonDecode(theData);
+  if(json["status"]=="success"){
+    List<ShoppingModel> list =[];
+    for(var j in json["data"]){
+      var startImg =j["image"]+"BEGIN";
+      var endImg=j["image"]+"END";
+      final startImgIndex = data.indexOf(startImg);
+      var endImgIndex = data.indexOf(endImg);
+      var urlIn = data.substring(startImgIndex, endImgIndex);
+      var imgurl = urlIn.substring(urlIn.indexOf("background-image:url('")+"background-image:url('".length,
+      urlIn.indexOf(".jpg')")+".jpg".length);
+      ShoppingModel sh = ShoppingModel(j["name"],j["category"],j["price"],imgurl,j["detail"],j["address"]);
+      list.add(sh);
+    }
+    AppVar.AllCards = list;
+  }
+  else{
+
+  }
+  return true;
 }
+
 }
-/**/

@@ -8,7 +8,7 @@ import 'AppStyle.dart';
 class ShoppingCard extends StatelessWidget {
   ShoppingModel product;
 
-  ShoppingCard(this.product);
+  ShoppingCard(this.product,{Key? key}):super(key :key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +55,14 @@ class ShoppingCard extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          product.info1,
+                          product.info,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16),
                         ),
                         Text(
-                          product.info2,
+                          product.address,
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16),
@@ -71,7 +71,7 @@ class ShoppingCard extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          product.price.toString() + "\$",
+                          product.price.toString(),
                           style: TextStyle(
                               color: AppStyle.liteColor,
                               fontWeight: FontWeight.bold,
@@ -92,7 +92,7 @@ class ShoppingCard extends StatelessWidget {
                       ),
                       child: Hero(
                         tag: product.title,
-                        child: Image.asset(product.productImage),
+                        child: Image(image: NetworkImage(product.productImage),),
                       ),
                     ),
                   ),
@@ -109,11 +109,11 @@ class ShoppingModel{
 
   String title;
   String tag;
-  String info1, info2;
-  double price;
+  String info, address;
+  String price;
   String productImage;
 
 
-  ShoppingModel(this.title, this.tag , this.price, this.productImage, this.info1, this.info2);
+  ShoppingModel(this.title, this.tag , this.price, this.productImage, this.info, this.address);
 
 }
